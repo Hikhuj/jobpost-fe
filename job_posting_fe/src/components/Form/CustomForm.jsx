@@ -2,7 +2,7 @@ import { React, useState }  from 'react';
 
 function CustomForm() {
 
-  const [htmlText, setHtmlText] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
   const [requirements, setRequirements] = useState('');
   const [jobDescription, setJobDescription] = useState('');
   const [recruiterContact, setRecruiterContact] = useState('');
@@ -20,25 +20,6 @@ function CustomForm() {
     );
   }
 
-  /*
-  const handleSubmit = () => {
-    // Prepare data
-    let tempData = new tempData();
-    tempData.append(htmlText, JSON.stringify(htmlText));
-    tempData.append(requirements, JSON.stringify(htmlText));
-    tempData.append(jobDescription, JSON.stringify(htmlText));
-    tempData.append(recruiterContact, JSON.stringify(htmlText));
-    setData(tempData);
-    // Send data to the backend via POST
-    fetch('http://------------:8080/', {  // Enter your IP address here
-
-      method: 'POST', 
-      mode: 'cors', 
-      body: JSON.stringify(data) // body data type must match "Content-Type" header
-
-    })
-  }
-  */
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent the default form submission
 
@@ -49,14 +30,15 @@ function CustomForm() {
       const response = await fetch('http://127.0.0.1:5000/data_to_image', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         mode: 'cors',
+        // It is required to serialize the content
         body: JSON.stringify({
-          htmlText,
-          requirements,
-          jobDescription,
-          recruiterContact,
+          jobTitle: jobTitle,
+          requirements: requirements,
+          jobDescription: jobDescription,
+          recruiterContact: recruiterContact,
         }),
       });
 
@@ -80,8 +62,8 @@ function CustomForm() {
     }
   };
 
-  function handleHtmlText(e) {
-    setHtmlText(e.target.value);
+  function handleJobTitle(e) {
+    setJobTitle(e.target.value);
   };
 
   function handleRequirements(e) {
@@ -97,7 +79,7 @@ function CustomForm() {
   }
 
   // if (loading) return <div className="mb-3"><h1>Loading...</h1></div>;
-  // if (error) return <div className="mb-3"><h1>Error: {error}</h1></div>
+  if (error) return <div className="mb-3"><h1>Error: {error}</h1></div>
   // if (!data) return <div className="mb-3"><h1>No data found</h1></div>
 
   return (
@@ -105,26 +87,40 @@ function CustomForm() {
       {/*<Welcome />*/}
       <div>
         <h1 className="h1">Welcome!</h1>
-        <p className="lead">Please add the required data</p>
+        <p className="lead">Lets create a simple job post</p>
       </div>
       <div className="mb-3">
         <form onSubmit={handleSubmit} className="mb-6">
           <div className="mb-3">
-            <label htmlFor="htmlText" className="form-label">Enter HTML Text: </label>
-            <textarea 
+            <label htmlFor="jobTitle" className="form-label">Job title: </label>
+            <input
+              placeholder="Add job title only"
               type="text" 
               className="form-control" 
-              name="htmlText" 
-              id="htmlText" 
-              rows="3" 
-              required 
-              value={htmlText}
-              onChange={handleHtmlText}
+              name="jobTitle" 
+              id="jobTitle" 
+              required
+              value={jobTitle}
+              onChange={handleJobTitle}
+              />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="jobDescription" className="form-label">Job Description: </label>
+            <textarea 
+              placeholder="Add job description, separated by ;"
+              type="text"
+              className="form-control" 
+              name="jobDescription" 
+              id="jobDescription" 
+              rows="3"
+              required
+              onChange={handleJobDescription}
               />
           </div>
           <div className="mb-3">
             <label htmlFor="requirements" className="form-label">Requirements: </label>
             <textarea 
+              placeholder="Add job description, separated by ;"
               type="text" 
               className="form-control" 
               name="requirements" 
@@ -135,18 +131,7 @@ function CustomForm() {
               />
           </div>
           <div className="mb-3">
-            <label htmlFor="jobDescription" className="form-label">Job Description: </label>
-            <textarea 
-              type="text"
-              className="form-control" 
-              name="jobDescription" 
-              id="jobDescription" 
-              required
-              onChange={handleJobDescription}
-              />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="recruiterContact" className="form-label">Contact Recruiter: </label>
+            <label htmlFor="recruiterContact" className="form-label">Recruiter Contact information: </label>
             <input 
               type="text" 
               className="form-control" 
